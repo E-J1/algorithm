@@ -1,6 +1,6 @@
-//https://leetcode.com/problems/permutations/
-//46. Permutations
-// ## answer1  Memory: 64.3mb
+https://leetcode.com/problems/permutations/
+46. Permutations
+## answer1  Memory: 64.3mb
 /**
  * @param {number[]} nums
  * @return {number[][]}
@@ -17,7 +17,7 @@ var permute = function (nums) {
         [...left.slice(0, i), ...left.slice(i + 1)]
       )
     );
-    // forEach 내부 동작 (재귀)
+    forEach 내부 동작 (재귀)
     /*([], [1,2,3,4])
         //n = 1, i=0
         createElement([1], [2,3,4])
@@ -48,21 +48,21 @@ var permute = function (nums) {
 
   return result;
 };
-// 시간 복잡도 O(N∗N!)
-// n!: 가능한 순열의 개수
-//n: 하나의 순열이 n개의 숫자를 포함하므로 배열 복사 시 O(n) 추가됨
-// 공간 복잡도 O(N∗N!)
+시간 복잡도 O(N∗N!)
+n!: 가능한 순열의 개수
+n: 하나의 순열이 n개의 숫자를 포함하므로 배열 복사 시 O(n) 추가됨
+공간 복잡도 O(N∗N!)
 
-/**
+
 | 방법                              | 시간 복잡도    | 공간 복잡도                    | 특징                             |
 | ------------------------------- | --------- | ------------------------- | ------------------------------ |
 | 📌 DFS + 백트래킹 (`dfs([], nums)`) | O(n × n!) | O(n) 스택 + O(n × n!) 결과 저장 | 간결, 직관적, 가장 널리 쓰임              |
 | 📌 DFS + `used[]` 배열 (방문 여부 체크) | O(n × n!) | O(n) + O(n × n!)          | 배열 복사를 줄일 수 있음                 |
 | 📌 Heap's Algorithm             | O(n × n!) | O(n × n!)                 | 재귀 없이 구현 가능. 배열 내부 스왑으로 메모리 절약 |
 | 📌 BFS / Queue 기반               | O(n × n!) | O(n × n!)                 | 큐 사용. 구조는 복잡하지만 반복문 기반         |
-*/
 
-//✅ 실전에서 가장 좋은 함수: DFS + 백트래킹 (slice로 분리)
+
+✅ 실전에서 가장 좋은 함수: DFS + 백트래킹 (slice로 분리)
 function permute(nums: number[]): number[][] {
   const result: number[][] = [];
 
@@ -84,15 +84,15 @@ function permute(nums: number[]): number[][] {
   return result;
 }
 
-// 👍 장점
-// 코드가 짧고, 읽기 쉽고, 직관적.
+👍 장점
+코드가 짧고, 읽기 쉽고, 직관적.
 
-// 재귀 스택 외엔 특별한 메모리를 쓰지 않음.
+재귀 스택 외엔 특별한 메모리를 쓰지 않음.
 
-// 디버깅 및 로직 이해가 가장 쉬움.
+디버깅 및 로직 이해가 가장 쉬움.
 
-// 👎 단점
-// slice()와 spread (...) 연산으로 인해 메모리 복사 비용 있음.
+👎 단점
+slice()와 spread (...) 연산으로 인해 메모리 복사 비용 있음.
 
 /* 구조 분석
 스택 기반 구조가 적절히 활용됨
@@ -112,12 +112,12 @@ function permute(nums: number[]): number[][] {
 유지보수와 확장성에도 유리합니다.
 */
 
-// 📌 스왑(Swap)은?
-// 배열의 두 요소 값을 맞바꾸는 것
-// 스왑은 메모리 복사 없이 배열을 바꾸는 가장 효율적인 방법이에요.
-//
-// arr[0] <-> arr[2] 스왑
-// [arr[0], arr[2]] = [arr[2], arr[0]];
+📌 스왑(Swap)은?
+배열의 두 요소 값을 맞바꾸는 것
+스왑은 메모리 복사 없이 배열을 바꾸는 가장 효율적인 방법이에요.
+
+arr[0] <-> arr[2] 스왑
+[arr[0], arr[2]] = [arr[2], arr[0]];
 
 /** 동시할당
  *  배열 형태로 동시에 할당하는 이유
@@ -198,27 +198,19 @@ splice()는 원본을 파괴하기 때문에, 복사 없이 쓰면 큰 버그가
  * @param {number[]} nums
  * @return {number[][]}
  */
-var permute = function (nums) {
-  // let comb = [{d: [], a: nums}];
-  // for(let i=0;i<nums.length;++i)
-  //     comb = comb.flatMap(c => c.a.map((a,i) => ({d: [...c.d, a], a: [...c.a.slice(0,i), ...c.a.slice(i+1)]})));
-  // return comb.map(a => a.d);
-  let res = [];
-  function gen(comb, nums) {
-    if (!nums.length) res.push(comb);
-    for (let i = 0; i < nums.length; ++i) {
-      // let n = [...nums];
-      //n.splice(i,1);
-      gen(
-        [...comb, nums[i]],
-        nums.filter((_, ii) => ii != i)
+var generatePermutations = function (numbers) {
+  let permutations = [];
+  function backtrack(currentPath, remainingNumbers) {
+    if (!numbers.length) permutations.push(currentPath);
+    for (let i = 0; i < remainingNumbers.length; ++i) {
+      backtrack(
+        [...currentPath, remainingNumbers[i]],
+        remainingNumbers.filter((_, ii) => ii != i)
       );
     }
   }
-  gen([], nums);
-  return res;
-  //console.log(res);
-  //return comb.map(a => a.d);
+  backtrack([], numbers);
+  return permutations;
 };
 /* answer1 vs answer2 메모리
 ## answer1
@@ -256,3 +248,82 @@ forEach와 전통적인 for 문 간의 메모리 사용량 차이는 배열 복�
 벤치마크를 보면, forEach는 약간의 함수 호출 오버헤드로 인해 성능이 미세하게 떨어질 수 있지만, 메모리 사용 면에서는 for 루프와 거의 동일한 수준을 유지합니다. 즉, 56 MB vs. 61 MB의 차이는 forEach vs. for 자체보다는, slice×2 + spread로 생성된 임시 배열 수가 주된 원인입니다
 
 */
+
+/* 메모리 피크(peak)란?*
+
+메모리 피크(peak)란 프로그램이 실행되는 동안 한 시점에 사용된 메모리의 최고치를 가리키며, 흔히 ‘최대 메모리 사용량’이라고도 합니다.
+
+# 정의 및 중요성
+정의: 프로그램 시작부터 종료 시점까지 순간순간 사용된 힙(heap), 스택(stack), 그리고 런타임이 관리하는 기타 메모리 영역의 합 중 가장 높은 값을 의미합니다.
+중요성: 메모리 피크를 알아야 OOM(Out-Of-Memory) 오류를 방지하고, 배포환경(컨테이너, 서버리스)의 메모리 한계를 적절히 설정할 수 있습니다.
+
+# 메모리 피크 발생 지점
+
+데이터 구조 생성: 대용량 배열, 객체, 버퍼를 한꺼번에 만들 때
+재귀 호출: 깊은 재귀가 쌓여 스택 프레임과 임시 자료구조가 동시에 메모리에 존재할 때
+GC 대기: 가비지 컬렉션 이전까지 해제되지 않은 객체들이 많은 경우
+
+# 측정 방법
+
+언어별 도구:
+JavaScript (Node.js): process.memoryUsage() 의 heapUsed와 heapTotal 수치를 출력해, 특정 함수 호출 전후 메모리 변화를 스크립트 내에서 측정할 수 있습니다
+Python: tracemalloc 모듈
+Java: -Xmx 설정과 jstat
+외부 프로파일러: Valgrind Massif, VisualVM, Chrome DevTools 등으로 힙 스냅샷(snapshot) 분석. clinic.js(—clinic doctor), heapdump, v8-profiler-node8 같은 도구로 주기적 힙 덤프를 떠서 분석하면, 대규모 애플리케이션에서도 메모리 패턴을 시각화할 수 있습니다.
+Chrome DevTools Memory 패널: Heap snapshot을 찍어 객체별 메모리 분포를 확인할 수 있습니다. 스냅샷 간 비교로 누수가 발생하는 지점을 추적합니다
+
+# 관리 전략
+
+메모리 절약 기법:
+인플레이스(in-place) 연산, 스트리밍(streaming) 처리
+청크(chunk) 단위로 나눠 작업
+GC 튜닝: 가비지 컬렉터 주기와 동작 방식을 조정
+
+리소스 한계 설정: 컨테이너 메모리 리밋, 서버리스 타임아웃 등 환경 제약을 미리 계산하여 설정
+*/ 
+
+/*
+ # GC를 강제 호출하거나 메모리 스냅샷을 찍는 최적의 타이밍
+
+.JIT 워밍업 이후, 실제 측정 바로 직전
+1. 워밍업 단계: 벤치마크 코드를 여러 번 실행해 V8이 함수들을 최적화(JIT)하도록 합니다.
+2. GC 강제 호출: --expose-gc 플래그로 global.gc()를 호출해 아직 회수되지 않은 쓰레기 객체를 정리합니다 
+Google Groups
+3. 스냅샷/측정: GC 직후에 Chrome DevTools나 heapdump 등의 도구로 힙 스냅샷(heap snapshot)을 떠서 “진짜 사용 중인” 메모리만 캡처합니다 
+Node.js
+.벤치마크 반복 간에도 동일한 패턴(워밍업 → global.gc() → 스냅샷)을 써서, GC 타이밍 차이에 따른 노이즈를 최소화할 수 있습니다.
+
+
+# V8 플래그로 재귀 최적화 과정을 관찰하는 설정
+
+--trace_opt
+“어떤 함수가 최적화 대상으로 선정되었는지” 로그를 출력합니다.
+
+--trace_deopt
+“최적화된 함수가 다시 디옵티마이즈(비최적화)된 지점”을 알려 줍니다.
+
+--max-old-space-size=<MB>
+Old-space(장기 객체 공간) 크기를 조절해 GC 빈도와 힙 사용량 한계를 설정할 수 있습니다.\
+
+사용예제
+`node --expose-gc --trace_opt --trace_deopt --max-old-space-size=2048 yourScript.js`
+
+재귀 함수가 최적화(JIT)·디옵티마이즈되는 시점을 로그로 확인할 수 있고, Old-space 크기를 2 GB로 고정해 GC 간섭 없이 최적화 여부를 테스트할 수 있습니다.
+
+
+# 프로덕션 벤치마크에서 “진짜 메모리 피크”를 잡아내는 패턴
+
+1. 프로세스 격리 측정
+child_process.fork() 또는 별도 스크립트로 벤치마킹 코드를 실행해, 각 반복마다 완전히 새 프로세스를 띄웁니다.
+이렇게 하면 이전 실행의 GC 타이밍·메모리 잔여가 측정에 끼치는 영향을 배제할 수 있습니다.
+
+2. 반복+평균화
+같은 시나리오를 5~10회 이상 반복 실행해, 각 회차의 최대 힙 사용량(process.memoryUsage().heapUsed)을 기록합니다.
+“최대값이 아니라, 상위 90 percentile”이나 “평균 + 표준편차” 등을 기준으로 피크를 판단하면 일시적 노이즈를 제거할 수 있습니다.
+
+3. 외부 프로파일러 통합
+Clinic.js Doctor나 heapdump 같은 툴을 CI 파이프라인에 연결해,
+“메모리 릭(m leak)” 경보를 띄우거나
+PR 단위로 ‘메모리 피크 비교 리포트’를 생성하도록 합니다.
+이때 “워밍업 → 강제 GC → 벤치마크 → GC → 스냅샷” 과정을 스크립트화해 자동화하면, 운영 환경에서도 일관된 결과를 얻을 수 있습니다 
+*/ 
